@@ -20,7 +20,7 @@
 AC_PREREQ(2.65)
 AC_CONFIG_MACRO_DIR([./aclocal])
 
-AC_INIT([thrift], [1.0.0-dev])
+AC_INIT([thrift], [0.9.3])
 
 AC_CONFIG_AUX_DIR([.])
 
@@ -122,7 +122,6 @@ if test "$enable_libs" = "no"; then
   with_perl="no"
   with_php="no"
   with_php_extension="no"
-  with_dart="no"
   with_erlang="no"
   with_go="no"
   with_d="no"
@@ -267,7 +266,7 @@ AM_CONDITIONAL(HAVE_NPM, [test "x$NPM" != "x"])
 AX_THRIFT_LIB(lua, [Lua], yes)
 have_lua=no
 if test "$with_lua" = "yes"; then
-  AX_PROG_LUA(5.2,, have_lua="yes", have_lua="no")
+  AX_PROG_LUA(5.1,, have_lua="yes", have_lua="no")
   if test "$have_lua" = "yes"; then
     AX_LUA_HEADERS(, have_lua="no")
     AX_LUA_LIBS(, have_lua="no")
@@ -325,16 +324,6 @@ AM_CONDITIONAL(WITH_PHP_EXTENSION, [test "$have_php_extension" = "yes"])
 
 AC_PATH_PROG([PHPUNIT], [phpunit])
 AM_CONDITIONAL(HAVE_PHPUNIT, [test "x$PHPUNIT" != "x"])
-
-AX_THRIFT_LIB(dart, [DART], yes)
-if test "$with_dart" = "yes"; then
-  AC_PATH_PROG([DART], [dart])
-  AC_PATH_PROG([DARTPUB], [pub])
-  if test "x$DART" != "x" -a "x$DARTPUB" != "x"; then
-    have_dart="yes"
-  fi
-fi
-AM_CONDITIONAL(WITH_DART, [test "$have_dart" = "yes"])
 
 AX_THRIFT_LIB(ruby, [Ruby], yes)
 have_ruby=no
@@ -738,7 +727,6 @@ AC_CONFIG_FILES([
   lib/perl/test/Makefile
   lib/php/Makefile
   lib/php/test/Makefile
-  lib/dart/Makefile
   lib/py/Makefile
   lib/rb/Makefile
   lib/lua/Makefile
@@ -750,7 +738,6 @@ AC_CONFIG_FILES([
   test/haxe/Makefile
   test/hs/Makefile
   test/php/Makefile
-  test/dart/Makefile
   test/perl/Makefile
   test/py/Makefile
   test/py.twisted/Makefile
@@ -765,7 +752,6 @@ AC_CONFIG_FILES([
   tutorial/java/Makefile
   tutorial/js/Makefile
   tutorial/nodejs/Makefile
-  tutorial/dart/Makefile
   tutorial/py/Makefile
   tutorial/py.twisted/Makefile
   tutorial/py.tornado/Makefile
@@ -780,18 +766,16 @@ if test "$have_java" = "yes" ; then MAYBE_JAVA="java" ; else MAYBE_JAVA="" ; fi
 AC_SUBST([MAYBE_JAVA])
 if test "$have_csharp" = "yes" ; then MAYBE_CSHARP="csharp" ; else MAYBE_CSHARP="" ; fi
 AC_SUBST([MAYBE_CSHARP])
-if test "$have_python" = "yes" ; then MAYBE_PYTHON="py" ; else MAYBE_PYTHON="" ; fi
+if test "$have_python" = "yes" ; then MAYBE_PYTHON="python" ; else MAYBE_PYTHON="" ; fi
 AC_SUBST([MAYBE_PYTHON])
 if test "$have_ruby" = "yes" ; then MAYBE_RUBY="rb" ; else MAYBE_RUBY="" ; fi
 AC_SUBST([MAYBE_RUBY])
-if test "$have_haskell" = "yes" ; then MAYBE_HASKELL="hs" ; else MAYBE_HASKELL="" ; fi
+if test "$have_haskell" = "yes" ; then MAYBE_HASKELL="haskell" ; else MAYBE_HASKELL="" ; fi
 AC_SUBST([MAYBE_HASKELL])
 if test "$have_perl" = "yes" ; then MAYBE_PERL="perl" ; else MAYBE_PERL="" ; fi
 AC_SUBST([MAYBE_PERL])
 if test "$have_php" = "yes" ; then MAYBE_PHP="php" ; else MAYBE_PHP="" ; fi
 AC_SUBST([MAYBE_PHP])
-if test "$have_dart" = "yes" ; then MAYBE_DART="dart" ; else MAYBE_DART="" ; fi
-AC_SUBST([MAYBE_DART])
 if test "$have_go" = "yes" ; then MAYBE_GO="go" ; else MAYBE_GO="" ; fi
 AC_SUBST([MAYBE_GO])
 if test "$have_nodejs" = "yes" ; then MAYBE_NODEJS="nodejs" ; else MAYBE_NODEJS="" ; fi
@@ -813,7 +797,6 @@ echo "Building Haxe Library ........ : $have_haxe"
 echo "Building Haskell Library ..... : $have_haskell"
 echo "Building Perl Library ........ : $have_perl"
 echo "Building PHP Library ......... : $have_php"
-echo "Building Dart Library ........ : $have_dart"
 echo "Building Erlang Library ...... : $have_erlang"
 echo "Building Go Library .......... : $have_go"
 echo "Building D Library ........... : $have_d"
@@ -850,12 +833,6 @@ if test "$have_php" = "yes" ; then
   echo
   echo "PHP Library:"
   echo "   Using php-config .......... : $PHP_CONFIG"
-fi
-if test "$have_dart" = "yes" ; then
-  echo
-  echo "Dart Library:"
-  echo "   Using Dart ................ : $DART"
-  echo "   Using Pub ................. : $DARTPUB"
 fi
 if test "$have_ruby" = "yes" ; then
   echo
